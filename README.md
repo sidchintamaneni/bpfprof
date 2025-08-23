@@ -9,4 +9,3 @@ reach out or raise a PR to fix any license-related issues.
 As mentioned earlier, I'm reusing a lot of code from the bpftop project, so
 many thanks to its maintainers and contributors.
 
-- Siddharth
