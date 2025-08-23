@@ -1,0 +1,11 @@
+build/
+target/
+root/
+deploy.sh
+perf.data
+flamegraph.svg
+vendor/
+*.tar.gz
+rpmbuild/
+*.rpm
+src/bpf/pid_iter.skel.rs

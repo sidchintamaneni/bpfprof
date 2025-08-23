@@ -1,0 +1,90 @@
+name: Rust
+
+on:
+  push:
+    branches: [ "main" ]
+    tags:
+      - 'v*'  # Trigger the workflow on push to tags like v1.0, v20.15.10
+  pull_request:
+    branches: [ "main" ]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  install_dependencies:
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Install cross
+      run: cargo install cross --git https://github.com/cross-rs/cross
+
+    - name: Cache dependencies
+      uses: actions/cache@v4.2.3
+      with:
+        path: ~/.cargo/bin
+        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-cargo-
+
+  build_and_test:
+    needs: install_dependencies
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    strategy:
+      matrix:
+        target:
+          - x86_64-unknown-linux-gnu
+          - aarch64-unknown-linux-gnu
+    steps:
+    - uses: actions/checkout@v4.1.1
+
+    - name: Restore dependencies from cache
+      uses: actions/cache@v4.2.3
+      with:
+        path: ~/.cargo/bin
+        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-cargo-
+
+    - name: Test
+      run: cross test --target ${{ matrix.target }}
+
+    - name: Clippy
+      run: cross clippy --target ${{ matrix.target }} --all --tests --all-features --no-deps
+
+    - name: Build
+      run: cross build --target ${{ matrix.target }} --release
+
+    - name: Rename binary
+      run: mv target/${{ matrix.target }}/release/bpftop target/${{ matrix.target }}/release/bpftop-${{ matrix.target }}
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4.3.3
+      with:
+        name: bpftop-${{ matrix.target }}
+        path: target/${{ matrix.target }}/release/bpftop-${{ matrix.target }}
+        if-no-files-found: error
+
+  create_release:
+    needs: build_and_test
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+
+    steps:
+    - name: Download all artifacts
+      id: download_artifacts
+      uses: actions/download-artifact@v4.1.7
+      with:
+        pattern: bpftop-*
+        path: artifacts
+        merge-multiple: true
+
+    - name: Create Release and Upload Artifacts
+      uses: ncipollo/release-action@v1.14.0
+      with:
+        artifacts: artifacts/bpftop-*
+        draft: true
+        allowUpdates: true
+        updateOnlyUnreleased: true
