@@ -52,28 +52,28 @@ root@q:/os-dev-env# cat /proc/sys/kernel/bpf_stats_enabled
 
 not as expected :(
 
-Configuration             Bitrate (Mbps)    Transfer (MB)     Samples   
--------------------------------------------------------------------------------------
-baseline                  18.6±1.2       23.8±0.9        10        
-fentry-map                19.9±1.1       25.4±0.8        10        
-fentry-map-stat           19.5±0.9       25.6±1.2        10        
-fentry-null               20.1±1.2       25.6±1.1        10        
-fentry-null-stat          19.6±1.6       25.4±1.2        10        
-kprobe-fprobe-map         20.6±1.3       25.7±1.1        10        
-kprobe-fprobe-map-stat    19.4±1.3       25.1±0.6        10        
-kprobe-fprobe-null        19.7±1.5       25.7±1.0        10        
-kprobe-fprobe-null-stat   20.5±1.3       26.1±1.6        10        
 
-=====================================================================================
-PERFORMANCE IMPACT vs BASELINE
-=====================================================================================
-Configuration             Bitrate Impact (%)   Transfer Impact (%) 
--------------------------------------------------------------------------------------
-fentry-map                   +6.7%                +6.9%
-fentry-map-stat              +4.7%                +7.7%
-fentry-null                  +8.2%                +7.7%
-fentry-null-stat             +5.3%                +6.7%
-kprobe-fprobe-map           +10.4%                +8.4%
-kprobe-fprobe-map-stat       +4.1%                +5.6%
-kprobe-fprobe-null           +5.5%                +8.3%
+| Configuration | Bitrate (Mbps) | Transfer (MB) | Samples |
+|---------------|----------------|---------------|---------|
+| baseline | 18.6±1.2 | 23.8±0.9 | 10 |
+| fentry-map | 19.9±1.1 | 25.4±0.8 | 10 |
+| fentry-map-stat | 19.5±0.9 | 25.6±1.2 | 10 |
+| fentry-null | 20.1±1.2 | 25.6±1.1 | 10 |
+| fentry-null-stat | 19.6±1.6 | 25.4±1.2 | 10 |
+| kprobe-fprobe-map | 20.6±1.3 | 25.7±1.1 | 10 |
+| kprobe-fprobe-map-stat | 19.4±1.3 | 25.1±0.6 | 10 |
+| kprobe-fprobe-null | 19.7±1.5 | 25.7±1.0 | 10 |
+| kprobe-fprobe-null-stat | 20.5±1.3 | 26.1±1.6 | 10 |
 
+## Performance Impact vs Baseline
+
+| Configuration | Bitrate Impact (%) | Transfer Impact (%) |
+|---------------|-------------------|---------------------|
+| fentry-map | +6.7% | +6.9% |
+| fentry-map-stat | +4.7% | +7.7% |
+| fentry-null | +8.2% | +7.7% |
+| fentry-null-stat | +5.3% | +6.7% |
+| kprobe-fprobe-map | +10.4% | +8.4% |
+| kprobe-fprobe-map-stat | +4.1% | +5.6% |
+| kprobe-fprobe-null | +5.5% | +8.3% |
+| kprobe-fprobe-null-stat | +10.3% | +9.8% |
