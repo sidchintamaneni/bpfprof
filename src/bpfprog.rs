@@ -5,6 +5,8 @@ pub struct Bpfprog {
     pub id: u32,
     pub bpf_type: String,
     pub name: String,
+    pub run_time_ns: u64,
+    pub run_cnt: u64,
 }
 
 impl fmt::Display for Bpfprog {
@@ -20,11 +22,13 @@ impl PartialEq for Bpfprog {
 }
 
 impl Bpfprog {
-    pub fn new(id: u32, bpf_type: String, name: String) -> Self {
+    pub fn new(id: u32, bpf_type: String, name: String, run_time_ns: u64, run_cnt: u64) -> Self {
         Self {
             id,
             bpf_type,
             name,
+            run_time_ns,
+            run_cnt,
         }
     }
 }
