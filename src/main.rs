@@ -184,12 +184,12 @@ fn profile_program(prog_id: u32, duration_secs: u64) -> Result<()> {
 
 fn main() -> Result<()> {
 
-    let mut iter_link: Option<libbpf_rs::Link> = None;
-    match load_pid_iter(&mut iter_link) {
-        Ok(()) => println!("Successfully loaded pid_iter BPF program"),
-        Err(e) => println!("Failed to load pid_iter BPF program: {}, continuing without process information", e),
-    }
-
+//    let mut iter_link: Option<libbpf_rs::Link> = None;
+//    match load_pid_iter(&mut iter_link) {
+//        Ok(()) => println!("Successfully loaded pid_iter BPF program"),
+//        Err(e) => println!("Failed to load pid_iter BPF program: {}, continuing without process information", e),
+//    }
+//
     unsafe {
         libbpf_sys::bpf_enable_stats(libbpf_sys::BPF_STATS_RUN_TIME);
     }
