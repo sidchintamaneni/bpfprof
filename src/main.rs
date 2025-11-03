@@ -1,18 +1,18 @@
 use anyhow::{Result, Context};
 use clap::{Parser, Subcommand};
-use libbpf_rs::skel::{OpenSkel, Skel, SkelBuilder};
+//use libbpf_rs::skel::{OpenSkel, Skel, SkelBuilder};
 use libbpf_rs::query::ProgInfoIter;
 use std::time::{Duration, Instant};
-use std::mem::MaybeUninit;
+//use std::mem::MaybeUninit;
 use std::thread;
 
 mod bpfprog;
 use bpfprog::Bpfprog;
 
-mod pid_iter {
-    include!(concat!(env!("OUT_DIR"), "/pid_iter.skel.rs"));
-}
-use pid_iter::PidIterSkelBuilder;
+//mod pid_iter {
+//    include!(concat!(env!("OUT_DIR"), "/pid_iter.skel.rs"));
+//}
+//use pid_iter::PidIterSkelBuilder;
 
 #[derive(Parser)]
 #[command(name = "bpfprof")]
@@ -49,28 +49,28 @@ struct Sample {
     cpu_percent: f64,
 }
 
-fn load_pid_iter(iter_link: &mut Option<libbpf_rs::Link>) -> Result<()> {
-
-    let prev_print_fn = unsafe {
-        libbpf_sys::libbpf_set_print(None)
-    };
-
-    let result = (|| -> Result<()> {
-        let skel_builder = PidIterSkelBuilder::default();
-        let mut open_object = MaybeUninit::uninit();
-        let open_skel = skel_builder.open(&mut open_object)?;
-        let mut skel = open_skel.load()?;
-        skel.attach()?;
-        *iter_link = skel.links.bpf_iter;
-        Ok(())
-    })();
-
-    unsafe {
-        libbpf_sys::libbpf_set_print(prev_print_fn); 
-    }
-    
-    result
-}
+//fn load_pid_iter(iter_link: &mut Option<libbpf_rs::Link>) -> Result<()> {
+//
+//    let prev_print_fn = unsafe {
+//        libbpf_sys::libbpf_set_print(None)
+//    };
+//
+//    let result = (|| -> Result<()> {
+//        let skel_builder = PidIterSkelBuilder::default();
+//        let mut open_object = MaybeUninit::uninit();
+//        let open_skel = skel_builder.open(&mut open_object)?;
+//        let mut skel = open_skel.load()?;
+//        skel.attach()?;
+//        *iter_link = skel.links.bpf_iter;
+//        Ok(())
+//    })();
+//
+//    unsafe {
+//        libbpf_sys::libbpf_set_print(prev_print_fn); 
+//    }
+//    
+//    result
+//}
 
 fn display_results(prog: &Bpfprog, samples: &[Sample]) {
     if samples.is_empty() {
@@ -182,6 +182,27 @@ fn profile_program(prog_id: u32, duration_secs: u64) -> Result<()> {
     Ok(())
 }
 
+fn list_programs() -> Result<()> {
+    println!("\tProg ID\t|\tProg name\t|\tProgram type\n");
+
+    let iter = ProgInfoIter::default();
+    let mut cnt = 0;
+    for prog in iter {
+        let _prog_name = match prog.name.to_str() {
+            Ok(name) if !name.is_empty() => name.to_string(),
+            _ => "unknown".to_string(),
+        };
+
+        let bpf_type = format!("{:?}", prog.ty);
+        println!("{}\t|\t{:?}\t|\t{:?}\n", prog.id, prog.name, bpf_type);
+
+        cnt += 1;
+    }
+
+    println!("Total: {} BPF programs", cnt);
+    Ok(())
+}
+
 fn main() -> Result<()> {
 
 //    let mut iter_link: Option<libbpf_rs::Link> = None;
@@ -203,6 +224,7 @@ fn main() -> Result<()> {
             }
         },
         Commands::List => {
+            list_programs()?;
         }
     }
 
