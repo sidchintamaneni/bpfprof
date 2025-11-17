@@ -2,18 +2,49 @@
 
 #### Build instructions
 
-`cargo build`
+```
+cargo build
+```
 
-`bpfprof prog [ID]` - samples the BPF program for 30 seconds (default) and prints out the output to the console
+## Usage
 
-`bpfprof prog [ID] -t [time (s)]`
+### List all BPF programs
 
-#### Misc
+```bash
+sudo ./target/debug/bpfprof list
+```
 
-Ignore this for now, since we are not using BPF iter in bpfprof anymore
+### Profile specific program(s)
 
-As I am using a custom kernel I am copying `bpf_core_read.h` and `bpf_helpers.h`
-manually to `/usr/include/bpf`.
+```bash
+# Profile single program for 30 seconds (default)
+sudo ./bpfprof prog id <PROG_ID>
 
-If you are using a distro kernel then you can get the headers by installing
-`libbpf-dev` package.
+# Profile with custom duration
+sudo ./bpfprof prog id <PROG_ID> -t <TIME_SECONDS>
+
+# Profile with custom sampling frequency (default: 997 Hz)
+sudo ./bpfprof prog id <PROG_ID> -f <FREQUENCY>
+
+# Profile multiple programs
+sudo ./bpfprof prog id <ID1> <ID2> <ID3> -t 30
+
+# Export results to CSV
+sudo ./bpfprof prog id <PROG_ID> -o results.csv
+```
+
+### Profile all BPF programs
+
+```bash
+# Profile all programs in the kernel
+sudo ./bpfprof prog all
+
+# Profile all with custom duration and export
+sudo ./bpfprof prog all -t 10 -o all_programs.csv
+```
+
+#### TODO
+
+- [ ] Add the ability to generate relavant graphs
+- [ ] Add relavant comments and do a `cargo fmt` on the proj
+- [ ] Refactor the code
