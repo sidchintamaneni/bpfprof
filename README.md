@@ -45,6 +45,8 @@ sudo ./bpfprof prog all -t 10 -o all_programs.csv
 
 #### TODO
 
+- [ ] Re-think if the cpu usage per event makesense or should do a total cpu
+  consumption like bpftop
 - [ ] Add the ability to generate relavant graphs
 - [ ] Add relavant comments and do a `cargo fmt` on the proj
 - [ ] Refactor the code
