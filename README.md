@@ -11,7 +11,7 @@ cargo build
 ### List all BPF programs
 
 ```bash
-sudo ./target/debug/bpfprof list
+sudo ./bpfprof list
 ```
 
 ### Profile specific program(s)
